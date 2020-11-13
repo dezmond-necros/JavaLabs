@@ -1,0 +1,123 @@
+package my.test.Banking;
+
+import my.test.exceptions.*;
+import my.test.readWrite.IOstream;
+
+public class Account implements my.test.AccountService
+{
+    int ID;
+    String holder;
+    int amount;
+
+    public Account(int ID, String holder, int amount)
+    {
+        this.ID = ID;
+        this.holder = holder;
+        this.amount = amount;
+    }
+
+    public Account(int ID)
+    {
+        this.ID = ID;
+        this.holder = findHolderById(ID);
+        this.amount = findAmountById(ID);
+    }
+
+    public int getID()
+    {
+        return ID;
+    }
+
+    public void setID(int ID)
+    {
+        this.ID = ID;
+    }
+
+    public String getHolder()
+    {
+        return holder;
+    }
+
+    public void setHolder(String holder)
+    {
+        this.holder = holder;
+    }
+
+    public int getAmount()
+    {
+        return amount;
+    }
+
+    public void setAmount(int amount)
+    {
+        this.amount = amount;
+    }
+
+    private String findHolderById(int ID)
+    {
+        String str = IOstream.backHolder(ID);
+        return str;
+    }
+
+    private  int findAmountById(int ID)
+    {
+        int am = IOstream.backAmount(ID);
+        return am;
+    }
+
+    @Override
+    public void addString()
+    {
+        if (IOstream.checkId(ID))
+        {
+            IOstream.writeToFile(ID+" "+holder+" "+amount);
+        }
+
+    }
+
+    @Override
+    public void withdraw(int amoun) throws NotEnoughMoneyException, UnknownAccountException
+    {
+        if (holder== null)
+        {
+            throw  new UnknownAccountException("Такого ID не существует!");
+//            System.out.println("Баланс : "+amount);
+        }
+        else if ((amount == -1)&&(amoun > amount))
+        {
+            throw new NotEnoughMoneyException("Недостаточно средств на счете");
+        }
+        else
+        {
+            amount = amount - amoun;
+            System.out.println("Текущий баланс счета: "+amount);
+
+        }
+
+    }
+
+    @Override
+    public void balance() throws UnknownAccountException
+    {
+        if (holder!= null)
+        {
+            System.out.println("Баланс : "+amount);
+        }
+        else
+        {
+           throw  new UnknownAccountException("Такого ID не существует!");
+        }
+    }
+
+    @Override
+    public void deposit(int amount) throws NotEnoughMoneyException, UnknownAccountException
+    {
+
+    }
+
+    @Override
+    public void transfer(int to, int amount) throws NotEnoughMoneyException, UnknownAccountException
+    {
+
+    }
+}
